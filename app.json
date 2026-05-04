@@ -1,0 +1,22 @@
+{
+  "name": "main",
+  "displayName": "MogulGame",
+  "expo": {
+    "name": "MogulGame",
+    "slug": "mogulgame-app",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.sudobility.mogulgame"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#ffffff"
+      },
+      "package": "com.sudobility.mogulgame"
+    }
+  }
+}
