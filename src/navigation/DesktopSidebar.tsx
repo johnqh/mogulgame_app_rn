@@ -1,13 +1,12 @@
 import React from 'react';
 import { View, Text, Pressable, StyleSheet } from 'react-native';
-import { ClockIcon, Cog6ToothIcon } from 'react-native-heroicons/outline';
+import { Cog6ToothIcon } from 'react-native-heroicons/outline';
 import {
-  ClockIcon as ClockIconSolid,
   Cog6ToothIcon as Cog6ToothIconSolid,
 } from 'react-native-heroicons/solid';
 import { useAppColors } from '@/hooks/useAppColors';
 
-export type SidebarTab = 'HistoriesTab' | 'SettingsTab';
+export type SidebarTab = 'SettingsTab';
 
 interface DesktopSidebarProps {
   activeTab: SidebarTab;
@@ -17,7 +16,6 @@ interface DesktopSidebarProps {
 const ICON_SIZE = 22;
 
 const tabs: { key: SidebarTab; label: string }[] = [
-  { key: 'HistoriesTab', label: 'Histories' },
   { key: 'SettingsTab', label: 'Settings' },
 ];
 
@@ -31,12 +29,6 @@ function TabIcon({
   color: string;
 }) {
   switch (tab) {
-    case 'HistoriesTab':
-      return focused ? (
-        <ClockIconSolid color={color} size={ICON_SIZE} />
-      ) : (
-        <ClockIcon color={color} size={ICON_SIZE} />
-      );
     case 'SettingsTab':
       return focused ? (
         <Cog6ToothIconSolid color={color} size={ICON_SIZE} />
