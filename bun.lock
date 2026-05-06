@@ -22,8 +22,8 @@
         "@sudobility/design": "^1.1.30",
         "@sudobility/di": "^1.5.53",
         "@sudobility/di_rn": "^0.1.86",
-        "@sudobility/mogulgame_client": "^0.0.23",
-        "@sudobility/mogulgame_lib": "^0.0.21",
+        "@sudobility/mogulgame_client": "^0.0.24",
+        "@sudobility/mogulgame_lib": "^0.0.22",
         "@sudobility/mogulgame_types": "^0.0.16",
         "@sudobility/types": "^1.9.61",
         "@tanstack/react-query": "^5.90.19",
@@ -641,9 +641,9 @@
 
     "@sudobility/di_rn": ["@sudobility/di_rn@0.1.86", "", { "peerDependencies": { "@sudobility/components-rn": "^1.0.59", "@sudobility/di": "^1.5.53", "@sudobility/types": "^1.9.61", "react": "^18.0.0 || ^19.0.0", "react-native": ">=0.72.0" } }, "sha512-rYENZHP8RD0qrQ2/Rjs+IirD73S8gQcGANrCJ61RwgGfJ8eLrGUwD8sI93+O7tfxOsKZjtpNB7OvIEW0WPptzQ=="],
 
-    "@sudobility/mogulgame_client": ["@sudobility/mogulgame_client@0.0.23", "", { "peerDependencies": { "@sudobility/types": "^1.9.61", "@tanstack/react-query": ">=5.0.0", "react": ">=18.0.0" } }, "sha512-aOBbx1c2gLnb9Ne1WVR/1qyuhpLXBRFjMOYK/+IYtF60GrWxILRsD1YPZ/9iZ/nXAPNrybKrGVSNCPid32PBPw=="],
+    "@sudobility/mogulgame_client": ["@sudobility/mogulgame_client@0.0.24", "", { "peerDependencies": { "@sudobility/types": "^1.9.61", "@tanstack/react-query": ">=5.0.0", "react": ">=18.0.0" } }, "sha512-iTz9XMnc2PW9r/vZtx+LOHl4TvDkgqRiC0mST0j8EApV91PsAUkF5YB05sSpaZ8TYpAMmWRBJlfvqHKm+CyTAQ=="],
 
-    "@sudobility/mogulgame_lib": ["@sudobility/mogulgame_lib@0.0.21", "", { "peerDependencies": { "@sudobility/types": "^1.9.61", "@tanstack/react-query": ">=5.0.0", "react": ">=18.0.0", "zustand": ">=5.0.0" } }, "sha512-y008BLeangCdKl8ETrTn6wlCzbTsBq82zd9F1++hl25dFNUAfAvA2czIbBHiM0jrjH9j0Gv0s14jnojCvZGv4g=="],
+    "@sudobility/mogulgame_lib": ["@sudobility/mogulgame_lib@0.0.22", "", { "peerDependencies": { "@sudobility/types": "^1.9.61", "@tanstack/react-query": ">=5.0.0", "react": ">=18.0.0", "zustand": ">=5.0.0" } }, "sha512-HrXg7Jg8zIAbCbyHb/VFhV5RweajtA1ACm2RwMXKHegQN3gJBdMH24/upIWTC6+rklxZ1sY0k4qtR0GhwALC8Q=="],
 
     "@sudobility/mogulgame_types": ["@sudobility/mogulgame_types@0.0.16", "", { "peerDependencies": { "@sudobility/types": "^1.9.61" } }, "sha512-Sjt/LwzOMpAVpRDrfFY/At60lnTrdSsCyQWvahWP5Ho1DdWm/2vrrXZGT0k68spNphIQXZCvGk3B8VnyR+6Flw=="],
 
