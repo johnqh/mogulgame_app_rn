@@ -22,9 +22,9 @@
         "@sudobility/design": "^1.1.30",
         "@sudobility/di": "^1.5.53",
         "@sudobility/di_rn": "^0.1.86",
-        "@sudobility/mogulgame_client": "^0.0.24",
-        "@sudobility/mogulgame_lib": "^0.0.22",
-        "@sudobility/mogulgame_types": "^0.0.16",
+        "@sudobility/mogulgame_client": "^0.0.25",
+        "@sudobility/mogulgame_lib": "^0.0.23",
+        "@sudobility/mogulgame_types": "^0.0.17",
         "@sudobility/types": "^1.9.61",
         "@tanstack/react-query": "^5.90.19",
         "expo": "~54.0.32",
@@ -641,11 +641,11 @@
 
     "@sudobility/di_rn": ["@sudobility/di_rn@0.1.86", "", { "peerDependencies": { "@sudobility/components-rn": "^1.0.59", "@sudobility/di": "^1.5.53", "@sudobility/types": "^1.9.61", "react": "^18.0.0 || ^19.0.0", "react-native": ">=0.72.0" } }, "sha512-rYENZHP8RD0qrQ2/Rjs+IirD73S8gQcGANrCJ61RwgGfJ8eLrGUwD8sI93+O7tfxOsKZjtpNB7OvIEW0WPptzQ=="],
 
-    "@sudobility/mogulgame_client": ["@sudobility/mogulgame_client@0.0.24", "", { "peerDependencies": { "@sudobility/types": "^1.9.61", "@tanstack/react-query": ">=5.0.0", "react": ">=18.0.0" } }, "sha512-iTz9XMnc2PW9r/vZtx+LOHl4TvDkgqRiC0mST0j8EApV91PsAUkF5YB05sSpaZ8TYpAMmWRBJlfvqHKm+CyTAQ=="],
+    "@sudobility/mogulgame_client": ["@sudobility/mogulgame_client@0.0.25", "", { "peerDependencies": { "@sudobility/types": "^1.9.61", "@tanstack/react-query": ">=5.0.0", "react": ">=18.0.0" } }, "sha512-tF7pPjsrjdHEbhDTCDX5Q/OP7mHOAzSRrMDa0ww4mwSLes3pZEPe7pCeoQyPX7Lb3heKQg2lE75LgGJbo4JW7g=="],
 
-    "@sudobility/mogulgame_lib": ["@sudobility/mogulgame_lib@0.0.22", "", { "peerDependencies": { "@sudobility/types": "^1.9.61", "@tanstack/react-query": ">=5.0.0", "react": ">=18.0.0", "zustand": ">=5.0.0" } }, "sha512-HrXg7Jg8zIAbCbyHb/VFhV5RweajtA1ACm2RwMXKHegQN3gJBdMH24/upIWTC6+rklxZ1sY0k4qtR0GhwALC8Q=="],
+    "@sudobility/mogulgame_lib": ["@sudobility/mogulgame_lib@0.0.23", "", { "peerDependencies": { "@sudobility/types": "^1.9.61", "@tanstack/react-query": ">=5.0.0", "react": ">=18.0.0", "zustand": ">=5.0.0" } }, "sha512-7pLR8Hpz+NfvcNtZs8TMcMWS5stuxJ/rvgmIzcoNlIc4NreHMYPL5ntH3G4Tj7f5dxzwVkgxL2ro35854qH8FQ=="],
 
-    "@sudobility/mogulgame_types": ["@sudobility/mogulgame_types@0.0.16", "", { "peerDependencies": { "@sudobility/types": "^1.9.61" } }, "sha512-Sjt/LwzOMpAVpRDrfFY/At60lnTrdSsCyQWvahWP5Ho1DdWm/2vrrXZGT0k68spNphIQXZCvGk3B8VnyR+6Flw=="],
+    "@sudobility/mogulgame_types": ["@sudobility/mogulgame_types@0.0.17", "", { "peerDependencies": { "@sudobility/types": "^1.9.61" } }, "sha512-whsE8RZjv+fVrO/OLhZXF4Akf3OB4mzc1c8Zaywlm575YDJEQEh1VkvwsjYZnJPzajHPghTwXjiWrSeW0ULI1w=="],
 
     "@sudobility/types": ["@sudobility/types@1.9.61", "", {}, "sha512-SODGpstB/iKfK3H/4BvJx/FBcc1h3gutUjGotyxN19VnOfWyzaDoEmW7eyoxOAYhZyXMXagSiii+NIEZvuxKog=="],
 
