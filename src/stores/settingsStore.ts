@@ -10,6 +10,9 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+// TODO: Import from '@sudobility/mogulgame_types' once ^0.0.20 is published
+// import type { CountryCode } from '@sudobility/mogulgame_types';
+export type CountryCode = 'US' | 'CA' | 'GB' | 'AE' | 'ES' | 'AU';
 
 /** The user's preferred colour scheme. `'system'` follows the OS setting. */
 export type ThemeMode = 'system' | 'light' | 'dark';
@@ -18,8 +21,12 @@ export type ThemeMode = 'system' | 'light' | 'dark';
 interface SettingsState {
   /** The current theme mode preference. */
   theme: ThemeMode;
+  /** The selected country for multi-country support. */
+  selectedCountry: CountryCode;
   /** Update the theme mode preference and persist it. */
   setTheme: (theme: ThemeMode) => void;
+  /** Update the selected country and persist it. */
+  setSelectedCountry: (country: CountryCode) => void;
   /** Reset all settings to their initial defaults. */
   reset: () => void;
 }
@@ -27,6 +34,7 @@ interface SettingsState {
 /** Default values for all settings fields. */
 const initialState = {
   theme: 'system' as ThemeMode,
+  selectedCountry: 'US' as CountryCode,
 };
 
 /**
@@ -46,6 +54,7 @@ export const useSettingsStore = create<SettingsState>()(
     set => ({
       ...initialState,
       setTheme: theme => set({ theme }),
+      setSelectedCountry: selectedCountry => set({ selectedCountry }),
       reset: () => set(initialState),
     }),
     {

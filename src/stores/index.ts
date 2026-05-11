@@ -1,1 +1,5 @@
-export { useSettingsStore, type ThemeMode } from './settingsStore';
+export {
+  useSettingsStore,
+  type ThemeMode,
+  type CountryCode,
+} from './settingsStore';

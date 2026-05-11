@@ -24,6 +24,9 @@ import { useSettingsStore, type ThemeMode } from '@/stores/settingsStore';
 import { useAppColors } from '@/hooks/useAppColors';
 import { changeLanguage } from '@/i18n';
 import { SUPPORTED_LANGUAGES, COMPANY_NAME } from '@/config/constants';
+// TODO: Import from '@sudobility/mogulgame_types' once ^0.0.20 is published
+// import type { CountryCode } from '@sudobility/mogulgame_types';
+import type { CountryCode } from '@/stores/settingsStore';
 import AuthModal from '@/components/AuthModal';
 import type { SettingsScreenProps } from '@/navigation/types';
 import { trackScreenView, trackButtonClick, trackEvent } from '@/analytics';
@@ -55,11 +58,22 @@ const themes: { value: ThemeMode; label: string }[] = [
   { value: 'dark', label: 'Dark' },
 ];
 
+/** Available country options for the country picker. */
+const COUNTRY_OPTIONS: { code: CountryCode; flag: string; name: string }[] = [
+  { code: 'US', flag: '\u{1F1FA}\u{1F1F8}', name: 'United States' },
+  { code: 'CA', flag: '\u{1F1E8}\u{1F1E6}', name: 'Canada' },
+  { code: 'GB', flag: '\u{1F1EC}\u{1F1E7}', name: 'United Kingdom' },
+  { code: 'AE', flag: '\u{1F1E6}\u{1F1EA}', name: 'UAE' },
+  { code: 'ES', flag: '\u{1F1EA}\u{1F1F8}', name: 'Spain' },
+  { code: 'AU', flag: '\u{1F1E6}\u{1F1FA}', name: 'Australia' },
+];
+
 export default function SettingsScreen(_props: SettingsScreenProps) {
   const { t } = useTranslation();
   const appColors = useAppColors();
   const { user, isLoading: authLoading, signOut } = useAuth();
-  const { theme, setTheme } = useSettingsStore();
+  const { theme, setTheme, selectedCountry, setSelectedCountry } =
+    useSettingsStore();
 
   const tabBarHeight = useTabBarHeight();
 
@@ -100,6 +114,18 @@ export default function SettingsScreen(_props: SettingsScreenProps) {
       { text: t('common.cancel'), style: 'cancel' as const },
     ]);
   }, [t]);
+
+  /** Show an alert to pick a country. */
+  const handleCountryChange = useCallback(() => {
+    trackButtonClick('country_change');
+    Alert.alert(t('settings.selectCountry', 'Select Country'), undefined, [
+      ...COUNTRY_OPTIONS.map(c => ({
+        text: `${c.flag} ${c.name}${c.code === selectedCountry ? ' \u2713' : ''}`,
+        onPress: () => setSelectedCountry(c.code),
+      })),
+      { text: t('common.cancel'), style: 'cancel' as const },
+    ]);
+  }, [selectedCountry, setSelectedCountry, t]);
 
   /** Confirm and execute sign-out. */
   const handleSignOut = useCallback(async () => {
@@ -196,6 +222,43 @@ export default function SettingsScreen(_props: SettingsScreenProps) {
                 style={[styles.settingValue, { color: appColors.textMuted }]}
               >
                 {LANGUAGE_LABELS[i18n.language] ?? i18n.language}
+              </Text>
+            </Pressable>
+            <View
+              style={[styles.separator, { backgroundColor: appColors.border }]}
+            />
+            <Pressable
+              style={styles.settingRow}
+              onPress={handleCountryChange}
+              accessibilityRole='button'
+              accessibilityLabel={`${t('settings.country', 'Country')}: ${
+                COUNTRY_OPTIONS.find(c => c.code === selectedCountry)?.name ??
+                selectedCountry
+              }`}
+            >
+              <View style={styles.settingContent}>
+                <Text style={[styles.settingLabel, { color: appColors.text }]}>
+                  {t('settings.country', 'Country')}
+                </Text>
+                <Text
+                  style={[
+                    styles.settingDescription,
+                    { color: appColors.textMuted },
+                  ]}
+                >
+                  {t(
+                    'settings.countryDescription',
+                    'Choose your country for property listings'
+                  )}
+                </Text>
+              </View>
+              <Text
+                style={[styles.settingValue, { color: appColors.textMuted }]}
+              >
+                {COUNTRY_OPTIONS.find(c => c.code === selectedCountry)?.flag ??
+                  ''}{' '}
+                {COUNTRY_OPTIONS.find(c => c.code === selectedCountry)?.name ??
+                  selectedCountry}
               </Text>
             </Pressable>
           </View>
