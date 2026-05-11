@@ -18,13 +18,13 @@
         "@react-navigation/native": "^7.1.28",
         "@react-navigation/native-stack": "^7.10.1",
         "@sudobility/auth_lib": "^0.0.76",
-        "@sudobility/building_blocks_rn": "^0.0.37",
+        "@sudobility/building_blocks_rn": "^0.0.40",
         "@sudobility/design": "^1.1.30",
         "@sudobility/di": "^1.5.56",
-        "@sudobility/di_rn": "^0.1.90",
-        "@sudobility/mogulgame_client": "^0.0.27",
-        "@sudobility/mogulgame_lib": "^0.0.25",
-        "@sudobility/mogulgame_types": "^0.0.19",
+        "@sudobility/di_rn": "^0.1.98",
+        "@sudobility/mogulgame_client": "^0.0.30",
+        "@sudobility/mogulgame_lib": "^0.0.27",
+        "@sudobility/mogulgame_types": "^0.0.21",
         "@sudobility/types": "^1.9.62",
         "@tanstack/react-query": "^5.90.19",
         "expo": "~54.0.32",
@@ -631,7 +631,7 @@
 
     "@sudobility/auth_lib": ["@sudobility/auth_lib@0.0.76", "", { "peerDependencies": { "@react-native-firebase/app": ">=18.0.0", "@react-native-firebase/auth": ">=18.0.0", "@sudobility/di": "^1.5.56", "@sudobility/types": "^1.9.62", "@tanstack/react-query": "^5.0.0", "firebase": "^12.7.0", "react": "^18.0.0 || ^19.0.0" }, "optionalPeers": ["@react-native-firebase/app", "@react-native-firebase/auth", "firebase"] }, "sha512-2LmhDkUjq+IyuUlIbDPfnQrohAs16gZKRTdPOkL2H/wZvbAKBuSgaUT0Lz2wGCzfUrdrgZAa7ExSOxfgHfbLxg=="],
 
-    "@sudobility/building_blocks_rn": ["@sudobility/building_blocks_rn@0.0.37", "", { "peerDependencies": { "@react-native-async-storage/async-storage": ">=1.0.0", "@react-navigation/native": ">=7.0.0", "@react-navigation/native-stack": ">=7.0.0", "@sudobility/design": "^1.1.30", "i18next": "^23.0.0 || ^24.0.0 || ^25.0.0", "react": "^18.0.0 || ^19.0.0", "react-i18next": "^14.0.0 || ^15.0.0 || ^16.0.0", "react-native": ">=0.72.0", "react-native-safe-area-context": ">=4.0.0" } }, "sha512-bX3SZrZth827PQcRXBp4EHzQ9B1TeJabZnX4f7fGUBu7qMIEVrzHxeDBT5T8G5BanUC5zD6vvYeTENju7/dA9w=="],
+    "@sudobility/building_blocks_rn": ["@sudobility/building_blocks_rn@0.0.40", "", { "peerDependencies": { "@react-native-async-storage/async-storage": ">=1.0.0", "@react-navigation/native": ">=7.0.0", "@react-navigation/native-stack": ">=7.0.0", "@sudobility/design": "^1.1.30", "i18next": "^23.0.0 || ^24.0.0 || ^25.0.0", "react": "^18.0.0 || ^19.0.0", "react-i18next": "^14.0.0 || ^15.0.0 || ^16.0.0", "react-native": ">=0.72.0", "react-native-in-app-review": ">=4.4.2", "react-native-safe-area-context": ">=4.0.0" }, "optionalPeers": ["react-native-in-app-review"] }, "sha512-ozGbbO0E3EmHJYam64/HgCF3gjNnZSWH3Mb56vD/o4Ncu2x0KeGtEFsDCGogRuhP/z4llWcTSWQK45u8ofn6iQ=="],
 
     "@sudobility/components-rn": ["@sudobility/components-rn@1.0.21", "", { "peerDependencies": { "@sudobility/design": "^1.1.19", "@sudobility/types": "^1.9.53", "class-variance-authority": "^0.7.0", "clsx": "^2.0.0", "nativewind": ">=4.0.0", "react": "^18.0.0 || ^19.0.0", "react-native": ">=0.72.0", "react-native-gesture-handler": ">=2.0.0", "react-native-reanimated": ">=3.0.0", "react-native-safe-area-context": ">=4.0.0", "react-native-svg": ">=13.0.0" } }, "sha512-DOmiRl3rDReMwW7774dvBWMO9unmFRzbtpDL57FzI40DYONR70405jysCdzXPQnR8W61qoL7nZbxyBpUSKtNBg=="],
 
@@ -639,13 +639,13 @@
 
     "@sudobility/di": ["@sudobility/di@1.5.56", "", { "peerDependencies": { "@notifee/react-native": ">=7.0.0", "@react-native-async-storage/async-storage": ">=1.19.0", "@react-native-community/netinfo": ">=9.0.0", "@react-native-firebase/analytics": ">=18.0.0", "@react-native-firebase/app": ">=18.0.0", "@react-native-firebase/messaging": ">=18.0.0", "@react-native-firebase/remote-config": ">=18.0.0", "@sudobility/types": "^1.9.62", "firebase": ">=11.0.0", "react": ">=18.0.0", "react-native": ">=0.70.0" }, "optionalPeers": ["@notifee/react-native", "@react-native-async-storage/async-storage", "@react-native-community/netinfo", "@react-native-firebase/analytics", "@react-native-firebase/app", "@react-native-firebase/messaging", "@react-native-firebase/remote-config", "firebase", "react-native"] }, "sha512-AoE8QVHZcoiwG26nqSoP53Ph2yjtac5xfAThA6oSlkeE8j/IVWPvkhA1pGW5DJhEEL16Npsl7g7Fev335wz+0A=="],
 
-    "@sudobility/di_rn": ["@sudobility/di_rn@0.1.90", "", { "peerDependencies": { "@sudobility/components-rn": "^1.0.61", "@sudobility/di": "^1.5.56", "@sudobility/types": "^1.9.62", "react": "^18.0.0 || ^19.0.0", "react-native": ">=0.72.0" } }, "sha512-R3LeD8u54paoabAUHjyq8YJiyKuDMYTUbaVRmF7AUpCKspKfZQOer6FMq2roFuW+5ivFLtg7I2lOgRU0V1yYDA=="],
+    "@sudobility/di_rn": ["@sudobility/di_rn@0.1.98", "", { "peerDependencies": { "@sudobility/components-rn": "^1.0.69", "@sudobility/di": "^1.5.56", "@sudobility/types": "^1.9.62", "react": "^18.0.0 || ^19.0.0", "react-native": ">=0.72.0" } }, "sha512-1oHu5SQ9/bq6HB4jHde5Xmb2/76DvjuV/exUErRw/4PO7hG221MkyAcTsu/kcsOZyEe0IGYgTsct9Pe9VOQcUA=="],
 
-    "@sudobility/mogulgame_client": ["@sudobility/mogulgame_client@0.0.27", "", { "peerDependencies": { "@sudobility/types": "^1.9.62", "@tanstack/react-query": ">=5.0.0", "react": ">=18.0.0" } }, "sha512-RmThffw18KbpXePL8WQkJp7LMmfOgWgqTRHm5+XxazWSBOKKEmjxcTGlRIn4/aZZEIsabzG4o8L8yJO7gGFHEA=="],
+    "@sudobility/mogulgame_client": ["@sudobility/mogulgame_client@0.0.30", "", { "peerDependencies": { "@sudobility/types": "^1.9.62", "@tanstack/react-query": ">=5.0.0", "react": ">=18.0.0" } }, "sha512-ITcs0TSHd9eYwKvVviWRqKfh0qPzBqDQ9tFAjNUEe7/Q4e+dDMs8Uv/5O628i9FFEqZc38+fgpNrKoTC6vL8Eg=="],
 
-    "@sudobility/mogulgame_lib": ["@sudobility/mogulgame_lib@0.0.25", "", { "peerDependencies": { "@sudobility/types": "^1.9.62", "@tanstack/react-query": ">=5.0.0", "react": ">=18.0.0", "zustand": ">=5.0.0" } }, "sha512-RfYsDZzpT3gCa8pxpq0hcw3VcV3W52PHbh2bqQoeIkCN4t7lO9qrGWD/rJdL6xDDhUr/typoFkXfYBiwYev7Pg=="],
+    "@sudobility/mogulgame_lib": ["@sudobility/mogulgame_lib@0.0.27", "", { "peerDependencies": { "@sudobility/types": "^1.9.62", "@tanstack/react-query": ">=5.0.0", "react": ">=18.0.0", "zustand": ">=5.0.0" } }, "sha512-uPoNn10Y4g12DgBK+bXVoO+ybwfFyf2cdKBRwuvuji4V6c7L5ub/6EAPjyfWRhtsquMPQDgKoHg2hNWEVB+mnw=="],
 
-    "@sudobility/mogulgame_types": ["@sudobility/mogulgame_types@0.0.19", "", { "peerDependencies": { "@sudobility/types": "^1.9.62" } }, "sha512-QEvIJRFztCSigNil9Cwsr2ZBW/oVTgZ0YQpDbnE6Gwjm6qGl52jFRluhCkMH3OxIk58HecSWdEibZVoo6Vmoig=="],
+    "@sudobility/mogulgame_types": ["@sudobility/mogulgame_types@0.0.21", "", { "peerDependencies": { "@sudobility/types": "^1.9.62" } }, "sha512-pnRvXgvDneyke0WW4qWrfUpVO0Urr0W3tKI48NjpvDh+2wshgKH8FnP69oImll89/Q2BEFPXSZ37xg63frCBfQ=="],
 
     "@sudobility/types": ["@sudobility/types@1.9.62", "", {}, "sha512-GOkz5oE7Fmlolba2aemBF2fKPtH4I2lHAjVta+fqZAoAV72DQaWYzVEjTwKZs/ACY/g9Z262IDa7lEh+IOrn7w=="],
 
