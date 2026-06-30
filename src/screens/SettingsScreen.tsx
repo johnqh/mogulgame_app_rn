@@ -3,25 +3,22 @@
  *
  * Displays appearance settings (theme), account info with sign-in/sign-out,
  * and about section. Uses the shared AuthModal for authentication flows.
+ *
+ * Styling comes entirely from the design system: layout via NativeWind
+ * `className`, colors via semantic tokens (bg-card, text-foreground,
+ * text-muted-foreground, border-border, ...) and `@sudobility/components-rn`
+ * components — no StyleSheet colors or hardcoded literals.
  */
 
 import React, { useCallback, useState, useEffect } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  Pressable,
-  ScrollView,
-  Alert,
-  ActivityIndicator,
-} from 'react-native';
+import { View, Pressable, ScrollView, Alert, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { Text, Spinner } from '@sudobility/components-rn';
 import { useTabBarHeight } from '@/hooks/useTabBarHeight';
 import { useTranslation } from 'react-i18next';
 import i18n from '@/i18n';
 import { useAuth } from '@/context/AuthContext';
 import { useSettingsStore, type ThemeMode } from '@/stores/settingsStore';
-import { useAppColors } from '@/hooks/useAppColors';
 import { changeLanguage } from '@/i18n';
 import { SUPPORTED_LANGUAGES, COMPANY_NAME } from '@/config/constants';
 // TODO: Import from '@sudobility/mogulgame_types' once ^0.0.20 is published
@@ -67,9 +64,13 @@ const COUNTRY_OPTIONS: { code: CountryCode; flag: string; name: string }[] = [
   { code: 'AU', flag: '\u{1F1E6}\u{1F1FA}', name: 'Australia' },
 ];
 
+/** A bordered separator between rows inside a settings group. */
+function RowSeparator() {
+  return <View className='h-px ml-4 bg-border' />;
+}
+
 export default function SettingsScreen(_props: SettingsScreenProps) {
   const { t } = useTranslation();
-  const appColors = useAppColors();
   const { user, isLoading: authLoading, signOut } = useAuth();
   const { theme, setTheme, selectedCountry, setSelectedCountry } =
     useSettingsStore();
@@ -91,7 +92,7 @@ export default function SettingsScreen(_props: SettingsScreenProps) {
     Alert.alert(t('settings.selectTheme'), undefined, [
       ...themes.map((th, index) => ({
         text: `${t(`settings.theme.${th.value}`, th.label)}${
-          index === currentIndex ? ' \u2713' : ''
+          index === currentIndex ? ' ✓' : ''
         }`,
         onPress: () => setTheme(th.value),
       })),
@@ -106,7 +107,7 @@ export default function SettingsScreen(_props: SettingsScreenProps) {
     Alert.alert(t('settings.language'), undefined, [
       ...SUPPORTED_LANGUAGES.map(lang => ({
         text: `${LANGUAGE_LABELS[lang] ?? lang}${
-          lang === activeLang ? ' \u2713' : ''
+          lang === activeLang ? ' ✓' : ''
         }`,
         onPress: () => changeLanguage(lang),
       })),
@@ -119,7 +120,7 @@ export default function SettingsScreen(_props: SettingsScreenProps) {
     trackButtonClick('country_change');
     Alert.alert(t('settings.selectCountry', 'Select Country'), undefined, [
       ...COUNTRY_OPTIONS.map(c => ({
-        text: `${c.flag} ${c.name}${c.code === selectedCountry ? ' \u2713' : ''}`,
+        text: `${c.flag} ${c.name}${c.code === selectedCountry ? ' ✓' : ''}`,
         onPress: () => setSelectedCountry(c.code),
       })),
       { text: t('common.cancel'), style: 'cancel' as const },
@@ -150,7 +151,7 @@ export default function SettingsScreen(_props: SettingsScreenProps) {
 
   return (
     <SafeAreaView
-      style={[styles.container, { backgroundColor: appColors.background }]}
+      className='flex-1 bg-background'
       edges={['left', 'right']}
     >
       <ScrollView
@@ -160,13 +161,19 @@ export default function SettingsScreen(_props: SettingsScreenProps) {
         ]}
       >
         {/* Appearance Section */}
-        <View style={styles.section}>
-          <Text style={[styles.sectionTitle, { color: appColors.textMuted }]}>
+        <View className='mb-7'>
+          <Text
+            size='sm'
+            weight='semibold'
+            color='muted'
+            transform='uppercase'
+            className='mb-2 px-1 tracking-wide'
+          >
             {t('settings.appearance')}
           </Text>
-          <View style={[styles.group, { backgroundColor: appColors.card }]}>
+          <View className='rounded-lg overflow-hidden bg-card'>
             <Pressable
-              style={styles.settingRow}
+              className='flex-row justify-between items-center py-3 px-4'
               onPress={handleThemeChange}
               accessibilityRole='button'
               accessibilityLabel={`${t('settings.theme.label')}: ${t(
@@ -174,60 +181,38 @@ export default function SettingsScreen(_props: SettingsScreenProps) {
                 currentTheme
               )}`}
             >
-              <View style={styles.settingContent}>
-                <Text style={[styles.settingLabel, { color: appColors.text }]}>
-                  {t('settings.theme.label')}
-                </Text>
-                <Text
-                  style={[
-                    styles.settingDescription,
-                    { color: appColors.textMuted },
-                  ]}
-                >
+              <View className='flex-1 mr-3'>
+                <Text size='base'>{t('settings.theme.label')}</Text>
+                <Text size='sm' color='muted' className='mt-0.5'>
                   {t('settings.themeDescription')}
                 </Text>
               </View>
-              <Text
-                style={[styles.settingValue, { color: appColors.textMuted }]}
-              >
+              <Text size='base' color='muted'>
                 {t(`settings.theme.${theme}`, currentTheme)}
               </Text>
             </Pressable>
-            <View
-              style={[styles.separator, { backgroundColor: appColors.border }]}
-            />
+            <RowSeparator />
             <Pressable
-              style={styles.settingRow}
+              className='flex-row justify-between items-center py-3 px-4'
               onPress={handleLanguageChange}
               accessibilityRole='button'
               accessibilityLabel={`${t('settings.language')}: ${
                 LANGUAGE_LABELS[i18n.language] ?? i18n.language
               }`}
             >
-              <View style={styles.settingContent}>
-                <Text style={[styles.settingLabel, { color: appColors.text }]}>
-                  {t('settings.language')}
-                </Text>
-                <Text
-                  style={[
-                    styles.settingDescription,
-                    { color: appColors.textMuted },
-                  ]}
-                >
+              <View className='flex-1 mr-3'>
+                <Text size='base'>{t('settings.language')}</Text>
+                <Text size='sm' color='muted' className='mt-0.5'>
                   {t('settings.languageDescription')}
                 </Text>
               </View>
-              <Text
-                style={[styles.settingValue, { color: appColors.textMuted }]}
-              >
+              <Text size='base' color='muted'>
                 {LANGUAGE_LABELS[i18n.language] ?? i18n.language}
               </Text>
             </Pressable>
-            <View
-              style={[styles.separator, { backgroundColor: appColors.border }]}
-            />
+            <RowSeparator />
             <Pressable
-              style={styles.settingRow}
+              className='flex-row justify-between items-center py-3 px-4'
               onPress={handleCountryChange}
               accessibilityRole='button'
               accessibilityLabel={`${t('settings.country', 'Country')}: ${
@@ -235,25 +220,16 @@ export default function SettingsScreen(_props: SettingsScreenProps) {
                 selectedCountry
               }`}
             >
-              <View style={styles.settingContent}>
-                <Text style={[styles.settingLabel, { color: appColors.text }]}>
-                  {t('settings.country', 'Country')}
-                </Text>
-                <Text
-                  style={[
-                    styles.settingDescription,
-                    { color: appColors.textMuted },
-                  ]}
-                >
+              <View className='flex-1 mr-3'>
+                <Text size='base'>{t('settings.country', 'Country')}</Text>
+                <Text size='sm' color='muted' className='mt-0.5'>
                   {t(
                     'settings.countryDescription',
                     'Choose your country for property listings'
                   )}
                 </Text>
               </View>
-              <Text
-                style={[styles.settingValue, { color: appColors.textMuted }]}
-              >
+              <Text size='base' color='muted'>
                 {COUNTRY_OPTIONS.find(c => c.code === selectedCountry)?.flag ??
                   ''}{' '}
                 {COUNTRY_OPTIONS.find(c => c.code === selectedCountry)?.name ??
@@ -264,29 +240,28 @@ export default function SettingsScreen(_props: SettingsScreenProps) {
         </View>
 
         {/* Account Section */}
-        <View style={styles.section}>
-          <Text style={[styles.sectionTitle, { color: appColors.textMuted }]}>
+        <View className='mb-7'>
+          <Text
+            size='sm'
+            weight='semibold'
+            color='muted'
+            transform='uppercase'
+            className='mb-2 px-1 tracking-wide'
+          >
             {t('settings.account')}
           </Text>
-          <View style={[styles.group, { backgroundColor: appColors.card }]}>
+          <View className='rounded-lg overflow-hidden bg-card'>
             {authLoading ? (
-              <View style={styles.settingRow}>
-                <ActivityIndicator size='small' color={appColors.primary} />
+              <View className='flex-row justify-between items-center py-3 px-4'>
+                <Spinner size='small' />
               </View>
             ) : user ? (
-              <View style={styles.settingRow}>
-                <View style={styles.settingContent}>
-                  <Text
-                    style={[styles.settingLabel, { color: appColors.text }]}
-                  >
+              <View className='flex-row justify-between items-center py-3 px-4'>
+                <View className='flex-1 mr-3'>
+                  <Text size='base'>
                     {user.email || t('auth.signedIn')}
                   </Text>
-                  <Text
-                    style={[
-                      styles.settingDescription,
-                      { color: appColors.textMuted },
-                    ]}
-                  >
+                  <Text size='sm' color='muted' className='mt-0.5'>
                     {user.displayName || user.uid.substring(0, 8)}
                   </Text>
                 </View>
@@ -295,16 +270,14 @@ export default function SettingsScreen(_props: SettingsScreenProps) {
                   accessibilityRole='button'
                   accessibilityLabel={t('auth.signOut')}
                 >
-                  <Text
-                    style={[styles.signOutText, { color: appColors.primary }]}
-                  >
+                  <Text size='base' color='primary'>
                     {t('auth.signOut')}
                   </Text>
                 </Pressable>
               </View>
             ) : (
               <Pressable
-                style={styles.settingRow}
+                className='flex-row justify-between items-center py-3 px-4'
                 onPress={() => {
                   trackButtonClick('sign_in');
                   setShowAuthModal(true);
@@ -312,23 +285,14 @@ export default function SettingsScreen(_props: SettingsScreenProps) {
                 accessibilityRole='button'
                 accessibilityLabel={t('auth.signIn')}
               >
-                <View style={styles.settingContent}>
-                  <Text
-                    style={[styles.settingLabel, { color: appColors.text }]}
-                  >
-                    {t('auth.signIn')}
-                  </Text>
-                  <Text
-                    style={[
-                      styles.settingDescription,
-                      { color: appColors.textMuted },
-                    ]}
-                  >
+                <View className='flex-1 mr-3'>
+                  <Text size='base'>{t('auth.signIn')}</Text>
+                  <Text size='sm' color='muted' className='mt-0.5'>
                     {t('settings.signInDescription')}
                   </Text>
                 </View>
-                <Text style={[styles.arrow, { color: appColors.textMuted }]}>
-                  {'\u203A'}
+                <Text size='xl' color='muted'>
+                  {'›'}
                 </Text>
               </Pressable>
             )}
@@ -336,14 +300,20 @@ export default function SettingsScreen(_props: SettingsScreenProps) {
         </View>
 
         {/* About Section */}
-        <View style={styles.section}>
-          <Text style={[styles.sectionTitle, { color: appColors.textMuted }]}>
+        <View className='mb-7'>
+          <Text
+            size='sm'
+            weight='semibold'
+            color='muted'
+            transform='uppercase'
+            className='mb-2 px-1 tracking-wide'
+          >
             {t('settings.about')}
           </Text>
-          <Text style={[styles.versionText, { color: appColors.textMuted }]}>
+          <Text size='sm' color='muted' className='px-1'>
             {t('settings.version')}
           </Text>
-          <Text style={[styles.copyrightText, { color: appColors.textMuted }]}>
+          <Text size='xs' color='muted' className='mt-1 px-1'>
             {t('settings.copyright', { companyName: COMPANY_NAME })}
           </Text>
         </View>
@@ -359,66 +329,5 @@ export default function SettingsScreen(_props: SettingsScreenProps) {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  content: {
-    padding: 16,
-    paddingBottom: 32,
-  },
-  section: {
-    marginBottom: 28,
-  },
-  sectionTitle: {
-    fontSize: 14,
-    fontWeight: '600',
-    textTransform: 'uppercase',
-    letterSpacing: 0.5,
-    marginBottom: 8,
-    paddingHorizontal: 4,
-  },
-  group: {
-    borderRadius: 10,
-    overflow: 'hidden',
-  },
-  separator: {
-    height: StyleSheet.hairlineWidth,
-    marginLeft: 16,
-  },
-  settingRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-  },
-  settingContent: {
-    flex: 1,
-    marginRight: 12,
-  },
-  settingLabel: {
-    fontSize: 16,
-  },
-  settingDescription: {
-    fontSize: 13,
-    marginTop: 2,
-  },
-  settingValue: {
-    fontSize: 16,
-  },
-  arrow: {
-    fontSize: 20,
-  },
-  signOutText: {
-    fontSize: 16,
-  },
-  versionText: {
-    fontSize: 14,
-    paddingHorizontal: 4,
-  },
-  copyrightText: {
-    fontSize: 12,
-    marginTop: 4,
-    paddingHorizontal: 4,
-  },
+  content: { padding: 16 },
 });

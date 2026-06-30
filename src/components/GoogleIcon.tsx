@@ -1,6 +1,11 @@
 import React from 'react';
 import Svg, { Path } from 'react-native-svg';
 
+// EXCEPTION: the four Google brand colors below are fixed brand-identity fills
+// (the official Google "G" logo). They intentionally do NOT theme-flip — a
+// semantic token would change them and break brand recognition. See the design
+// guide's list of legitimate fixed-color exceptions (brand/logo SVG fills).
+
 interface GoogleIconProps {
   size?: number;
 }

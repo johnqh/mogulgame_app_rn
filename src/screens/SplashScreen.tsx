@@ -1,38 +1,15 @@
 import React from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  useColorScheme,
-  ActivityIndicator,
-} from 'react-native';
+import { View } from 'react-native';
+import { Heading, Spinner } from '@sudobility/components-rn';
 import { APP_NAME } from '@/config/constants';
 
 export default function SplashScreen() {
-  const colorScheme = useColorScheme();
-  const bg = colorScheme === 'dark' ? '#111827' : '#ffffff';
-  const textColor = colorScheme === 'dark' ? '#f9fafb' : '#111827';
-
   return (
-    <View style={[styles.container, { backgroundColor: bg }]}>
-      <Text style={[styles.title, { color: textColor }]}>{APP_NAME}</Text>
-      <ActivityIndicator size='large' color='#2563eb' style={styles.spinner} />
+    <View className='flex-1 bg-background items-center justify-center'>
+      <Heading level={1} size='2xl' weight='bold' className='mb-6'>
+        {APP_NAME}
+      </Heading>
+      <Spinner size='large' className='mt-4' />
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    marginBottom: 24,
-  },
-  spinner: {
-    marginTop: 16,
-  },
-});

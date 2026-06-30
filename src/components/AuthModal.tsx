@@ -2,9 +2,11 @@
  * AuthModal - Shared authentication modal component
  *
  * Provides a reusable modal with Google Sign-In, email/password form,
- * mode toggle (sign-in vs sign-up), and error display. Used by both
- * HistoriesScreen and SettingsScreen to avoid duplicating ~100 lines
- * of auth UI and handler logic in each screen.
+ * mode toggle (sign-in vs sign-up), and error display.
+ *
+ * Styling comes entirely from the design system: layout via NativeWind
+ * `className`, colors via semantic tokens and `@sudobility/components-rn`
+ * components (Text/Button/Input) — no StyleSheet colors or hardcoded literals.
  *
  * @example
  * ```tsx
@@ -13,20 +15,11 @@
  */
 
 import React, { useState, useCallback } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  Pressable,
-  TextInput,
-  ActivityIndicator,
-  Modal,
-  Platform,
-} from 'react-native';
+import { View, Pressable, Modal, Platform } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { Text, Button, Input } from '@sudobility/components-rn';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/context/AuthContext';
-import { useAppColors } from '@/hooks/useAppColors';
 import GoogleIcon from '@/components/GoogleIcon';
 import { trackButtonClick, trackError, trackEvent } from '@/analytics';
 
@@ -53,7 +46,6 @@ export default function AuthModal({
   initialMode = 'signin',
 }: AuthModalProps) {
   const { t } = useTranslation();
-  const appColors = useAppColors();
   const { signInWithGoogle, signInWithEmail, signUpWithEmail } = useAuth();
 
   const [authMode, setAuthMode] = useState<'signin' | 'signup'>(initialMode);
@@ -131,79 +123,50 @@ export default function AuthModal({
   }, [signInWithGoogle, t, handleDismiss]);
 
   const modalContent = (
-    <SafeAreaView
-      style={[styles.modalContainer, { backgroundColor: appColors.background }]}
-    >
-      <View
-        style={[
-          styles.modalHeader,
-          {
-            borderBottomColor: appColors.border,
-            backgroundColor: appColors.card,
-          },
-        ]}
-      >
+    <SafeAreaView className='flex-1 bg-background'>
+      <View className='flex-row justify-between items-center px-4 py-3 border-b border-border bg-card'>
         <Pressable
           onPress={handleDismiss}
           accessibilityRole='button'
           accessibilityLabel={t('common.cancel')}
         >
-          <Text style={[styles.modalCancel, { color: appColors.primary }]}>
+          <Text size='base' color='primary'>
             {t('common.cancel')}
           </Text>
         </Pressable>
-        <Text style={[styles.modalTitle, { color: appColors.text }]}>
+        <Text size='lg' weight='semibold'>
           {authMode === 'signin' ? t('auth.signIn') : t('auth.signUp')}
         </Text>
-        <View style={styles.modalHeaderSpacer} />
+        <View className='w-16' />
       </View>
 
-      <View style={styles.modalContent}>
+      <View className='p-6'>
         <Pressable
-          style={[
-            styles.googleButton,
-            { backgroundColor: appColors.card, borderColor: appColors.border },
-            isSubmitting && styles.buttonDisabled,
-          ]}
+          className={`flex-row items-center justify-center gap-3 rounded-md border border-border bg-card py-3.5 ${
+            isSubmitting ? 'opacity-60' : ''
+          }`}
           onPress={handleGoogleSignIn}
           disabled={isSubmitting}
           accessibilityRole='button'
           accessibilityLabel={t('auth.continueWithGoogle')}
         >
           <GoogleIcon size={20} />
-          <Text
-            style={[
-              styles.googleButtonText,
-              { color: appColors.textSecondary },
-            ]}
-          >
+          <Text size='base' weight='medium'>
             {t('auth.continueWithGoogle')}
           </Text>
         </Pressable>
 
-        <View style={styles.dividerRow}>
-          <View
-            style={[styles.dividerLine, { backgroundColor: appColors.border }]}
-          />
-          <Text style={[styles.dividerText, { color: appColors.textMuted }]}>
+        <View className='flex-row items-center my-4'>
+          <View className='flex-1 h-px bg-border' />
+          <Text size='sm' color='muted' className='px-3'>
             {t('common.or')}
           </Text>
-          <View
-            style={[styles.dividerLine, { backgroundColor: appColors.border }]}
-          />
+          <View className='flex-1 h-px bg-border' />
         </View>
 
-        <TextInput
-          style={[
-            styles.input,
-            {
-              backgroundColor: appColors.card,
-              borderColor: appColors.border,
-              color: appColors.text,
-            },
-          ]}
+        <Input
+          className='mb-3'
           placeholder={t('auth.email')}
-          placeholderTextColor={appColors.textMuted}
           value={email}
           onChangeText={setEmail}
           autoCapitalize='none'
@@ -212,17 +175,9 @@ export default function AuthModal({
           accessibilityLabel={t('auth.email')}
         />
 
-        <TextInput
-          style={[
-            styles.input,
-            {
-              backgroundColor: appColors.card,
-              borderColor: appColors.border,
-              color: appColors.text,
-            },
-          ]}
+        <Input
+          className='mb-3'
           placeholder={t('auth.password')}
-          placeholderTextColor={appColors.textMuted}
           value={password}
           onChangeText={setPassword}
           secureTextEntry
@@ -231,49 +186,35 @@ export default function AuthModal({
         />
 
         {authError && (
-          <Text
-            style={[styles.errorText, { color: appColors.error }]}
-            accessibilityRole='alert'
-          >
+          <Text size='sm' color='danger' align='center' className='mb-3'>
             {authError}
           </Text>
         )}
 
-        <Pressable
-          style={[
-            styles.submitButton,
-            { backgroundColor: appColors.primary },
-            isSubmitting && styles.buttonDisabled,
-          ]}
-          onPress={handleAuthSubmit}
+        <Button
+          variant='primary'
+          loading={isSubmitting}
           disabled={isSubmitting}
-          accessibilityRole='button'
+          onPress={handleAuthSubmit}
+          className='mt-2'
           accessibilityLabel={
             authMode === 'signin' ? t('auth.signIn') : t('auth.signUp')
           }
         >
-          {isSubmitting ? (
-            <ActivityIndicator size='small' color='#ffffff' />
-          ) : (
-            <Text style={styles.submitButtonText}>
-              {authMode === 'signin' ? t('auth.signIn') : t('auth.signUp')}
-            </Text>
-          )}
-        </Pressable>
+          {authMode === 'signin' ? t('auth.signIn') : t('auth.signUp')}
+        </Button>
 
         <Pressable
           onPress={() =>
             setAuthMode(authMode === 'signin' ? 'signup' : 'signin')
           }
-          style={styles.switchAuthMode}
+          className='mt-6 items-center'
           accessibilityRole='button'
           accessibilityLabel={
             authMode === 'signin' ? t('auth.noAccount') : t('auth.hasAccount')
           }
         >
-          <Text
-            style={[styles.switchAuthModeText, { color: appColors.primary }]}
-          >
+          <Text size='sm' color='primary'>
             {authMode === 'signin' ? t('auth.noAccount') : t('auth.hasAccount')}
           </Text>
         </Pressable>
@@ -284,7 +225,11 @@ export default function AuthModal({
   // Modal is not supported on macOS/Windows — use a full-screen overlay instead.
   if (Platform.OS === 'macos' || Platform.OS === 'windows') {
     if (!visible) return null;
-    return <View style={styles.fullScreenOverlay}>{modalContent}</View>;
+    return (
+      <View className='absolute top-0 bottom-0 left-0 right-0 z-50'>
+        {modalContent}
+      </View>
+    );
   }
 
   return (
@@ -298,94 +243,3 @@ export default function AuthModal({
     </Modal>
   );
 }
-
-const styles = StyleSheet.create({
-  fullScreenOverlay: {
-    ...StyleSheet.absoluteFillObject,
-    zIndex: 1000,
-  },
-  modalContainer: {
-    flex: 1,
-  },
-  modalHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    borderBottomWidth: 1,
-  },
-  modalCancel: {
-    fontSize: 16,
-  },
-  modalTitle: {
-    fontSize: 17,
-    fontWeight: '600',
-  },
-  modalHeaderSpacer: {
-    width: 60,
-  },
-  modalContent: {
-    padding: 24,
-  },
-  input: {
-    borderWidth: 1,
-    borderRadius: 8,
-    paddingHorizontal: 16,
-    paddingVertical: 14,
-    fontSize: 16,
-    marginBottom: 12,
-  },
-  errorText: {
-    fontSize: 14,
-    marginBottom: 12,
-    textAlign: 'center',
-  },
-  submitButton: {
-    paddingVertical: 14,
-    borderRadius: 8,
-    alignItems: 'center',
-    marginTop: 8,
-  },
-  buttonDisabled: {
-    opacity: 0.6,
-  },
-  submitButtonText: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#ffffff',
-  },
-  switchAuthMode: {
-    marginTop: 24,
-    alignItems: 'center',
-  },
-  switchAuthModeText: {
-    fontSize: 14,
-  },
-  googleButton: {
-    borderWidth: 1,
-    borderRadius: 8,
-    paddingVertical: 14,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 12,
-  },
-  googleButtonText: {
-    fontSize: 16,
-    fontWeight: '500',
-  },
-  dividerRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginVertical: 16,
-  },
-  dividerLine: {
-    flex: 1,
-    height: StyleSheet.hairlineWidth,
-  },
-  dividerText: {
-    fontSize: 14,
-    paddingHorizontal: 12,
-  },
-});
