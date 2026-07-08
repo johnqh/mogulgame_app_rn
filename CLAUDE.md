@@ -1,135 +1,180 @@
 # MogulGame App RN
 
-React Native mobile application for the MogulGame project.
+React Native application for the MogulGame project. Runs on **iOS, Android, macOS, and Windows**.
 
 **Package**: `mogulgame_app_rn` (private)
+
+> **Status: this is still a lightly-modified starter template.** No MogulGame domain logic has landed
+> yet. There is exactly **one tab** (Settings) and **two screens** (`SettingsScreen`, `SplashScreen`).
+> `@sudobility/mogulgame_client`, `mogulgame_lib`, and `mogulgame_types` are all installed but have
+> **zero import sites** in `src/`. Expect starter residue throughout: `displayName: "Starter App"`,
+> `repository` pointing at `starter_app_rn.git`, Xcode targets named `StarterApp`, Android package
+> `com.sudobility.starter`, zustand persist key `starter-settings`, storage keys `@starter/*`, and a
+> `"S"` sidebar logo.
 
 ## Tech Stack
 
 - **Language**: TypeScript (JSX)
-- **Runtime**: React Native 0.81 + Expo ~54
+- **Runtime**: Bare React Native 0.81 + Expo SDK ~54 modules (**not** Expo-managed, **not** Expo Router)
 - **Package Manager**: Bun (do not use npm/yarn/pnpm for installing dependencies)
-- **Navigation**: React Navigation 7 (Bottom Tabs + Native Stack)
-- **State**: Zustand 5
+- **Navigation**: React Navigation 7 (Bottom Tabs on mobile; custom sidebar on desktop)
+- **State**: Zustand 5 (one store)
 - **Data Fetching**: TanStack Query 5
-- **Auth**: Firebase Auth with AsyncStorage persistence, Google Sign-In
-- **i18n**: i18next
-- **Test**: Jest
-- **Bundler**: Metro (port 8090)
+- **Styling**: NativeWind 4 + Tailwind 3
+- **Auth**: Firebase (native SDK on mobile, JS SDK + WebAuth PKCE on desktop), Google Sign-In
+- **Test**: Jest (**not** Vitest)
 
 ## Project Structure
 
 ```
+index.ts                              # AppRegistry.registerComponent — bare RN entry
+App.tsx                               # Provider stack + two splash gates
 src/
-├── polyfills/
-│   └── localStorage.ts              # localStorage polyfill for Zustand persist
+├── analytics.ts                      # Thin wrappers over getAnalytics() from @/di
+├── components/
+│   ├── AuthModal.tsx                 # Google + email/password sign-in modal
+│   ├── GoogleIcon.tsx                # Brand SVG (intentional hardcoded colors)
+│   └── ThemeVarsProvider.tsx         # Applies NativeWind vars() on a wrapping View
 ├── config/
-│   ├── constants.ts                  # App name, languages, storage keys, tab names
-│   ├── env.ts                        # Environment variable reader
-│   └── theme.ts                      # Theme configuration
+│   ├── constants.ts                  # APP_NAME, SUPPORTED_LANGUAGES (15), STORAGE_KEYS, TAB_NAMES
+│   ├── env.ts                        # THE only place process.env is read
+│   ├── theme.ts                      # React Navigation light/dark themes
+│   ├── themeVars.ts                  # NativeWind vars() from design tokens
+│   └── designTheme.ts                # configureTheme() + cssInterop(Svg)
 ├── context/
-│   ├── index.ts
-│   ├── AuthContext.tsx                # Custom auth context (Firebase + Google Sign-In)
-│   └── ApiContext.tsx                 # API client + QueryClient provider
-├── stores/
-│   ├── index.ts
-│   └── settingsStore.ts              # Settings persisted via Zustand + AsyncStorage
+│   ├── ApiContext.tsx                # Hand-rolled fetch NetworkClient + 401 refresh-and-retry
+│   ├── AuthContext.tsx               # DESKTOP variant (auth_lib/auth-js + WebAuth PKCE)
+│   ├── AuthContext.ios.tsx           # iOS (auth_lib/auth-native + native GoogleSignin)
+│   └── AuthContext.android.tsx       # Android (same body as .ios)
+├── di/
+│   ├── initializeServices.ts         # DESKTOP variant — no-ops, returns null
+│   ├── initializeServices.ios.ts     # initializeRNApp + initializeFirebaseAuth
+│   └── initializeServices.android.ts
 ├── hooks/
-│   └── useAppColors.ts               # Theme-aware color hook
-├── i18n/
-│   └── index.ts                      # i18next setup with react-native-localize
+│   ├── useAppColors.ts
+│   ├── useTabBarHeight.ts            # DESKTOP variant — returns 0
+│   ├── useTabBarHeight.ios.ts
+│   └── useTabBarHeight.android.ts
+├── i18n/index.ts                     # i18next + device locale + AsyncStorage persistence
 ├── navigation/
-│   ├── index.ts
-│   ├── types.ts                      # Navigation type definitions
-│   ├── AppNavigator.tsx              # Root navigator (auth gate)
-│   ├── HistoriesStack.tsx            # Histories list + detail stack
-│   └── SettingsStack.tsx             # Settings stack
+│   ├── AppNavigator.tsx              # Branches DesktopNavigator vs MobileNavigator
+│   ├── DesktopSidebar.tsx            # 80px sidebar (macOS/Windows)
+│   ├── SettingsStack.tsx             # Native stack with exactly one screen
+│   └── types.ts                      # RootTabParamList = { SettingsTab }
+├── polyfills/localStorage.ts         # In-memory shim — MUST be imported first
 ├── screens/
-│   ├── index.ts
-│   ├── SplashScreen.tsx              # Loading / auth check screen
-│   ├── HistoriesScreen.tsx           # History list
-│   ├── HistoryDetailScreen.tsx       # Single history detail
-│   └── SettingsScreen.tsx            # User settings
-└── components/
-    └── GoogleIcon.tsx                # Google sign-in button icon
+│   ├── SettingsScreen.tsx            # Theme, language, country, account, about
+│   └── SplashScreen.tsx              # Rendered directly by App.tsx, not registered
+└── stores/settingsStore.ts           # The only zustand store
 ```
+
+`src/services/` and `src/native/` are aliased in babel/tsconfig but **do not exist**.
 
 ## Commands
 
 ```bash
-bun run start          # Start Metro bundler on port 8090
-bun run android        # Run on Android device/emulator
-bun run ios            # Run on iOS device/simulator
-bun run lint           # Run ESLint
+bun run start          # Metro on port 8090
+bun run ios            # Build + run iOS
+bun run android        # Build + run Android
+bun run macos          # Build + run macOS
+bun run windows        # Build + run Windows
 bun run typecheck      # TypeScript check
-bun run test           # Run Jest tests (colocated files; note: Jest, not Vitest)
+bun run lint           # Run ESLint
+bun run test           # jest --passWithNoTests (see Gotchas)
+bun run verify         # typecheck + lint + test
 ```
 
-## Navigation Structure
+Every `start`/`ios`/`android`/`macos`/`windows` script has a `pre*` hook that runs
+`scripts/merge-env.js` (merges `.env` then `.env.local` into `.env.merged`) and
+`scripts/generate-theme-css.js`, then clears the Metro cache.
 
-Bottom tabs:
+## Platform-Suffix Resolution — Read This First
 
-- **Histories** tab — HistoriesScreen -> HistoryDetailScreen (stack)
-- **Settings** tab — SettingsScreen
+Three modules use RN's platform-extension mechanism, and **the unsuffixed `.ts` file is the
+desktop/fallback implementation, not the shared one**:
 
-## Auth
+| Base file (desktop) | Platform variants |
+|---|---|
+| `di/initializeServices.ts` (no-ops, returns `null`) | `.ios.ts`, `.android.ts` |
+| `context/AuthContext.tsx` (JS SDK + WebAuth PKCE) | `.ios.tsx`, `.android.tsx` (native) |
+| `hooks/useTabBarHeight.ts` (returns `0`) | `.ios.ts`, `.android.ts` |
 
-Uses a custom `AuthContext` (not @sudobility/auth-components) with:
+There are **no `.macos.*` / `.windows.*` files** — desktop gets the base file. Consequences:
 
-- Firebase Auth initialized with AsyncStorage persistence
-- Google Sign-In via `@react-native-google-signin/google-signin`
+- On desktop, `getAnalytics()` returns `null`, so every `src/analytics.ts` call silently no-ops.
+- Editing the base `.ts` to "fix mobile" changes **only desktop**.
 
-## Networking
+`react-native.config.js` disables all seven `@react-native-firebase/*` modules and `google-signin`
+on macOS.
 
-Custom `NetworkClient` implementation (fetch-based) — does not use the web DI layer. Configured via `ApiContext` which provides the mogulgame_client and QueryClient.
+## Theming
 
-## Dependencies
+The active design theme must be kept in sync across **four** places: `tailwind.config.js`,
+`global.css` (generated by `prestart`, checked in, "do not edit by hand"), `src/config/designTheme.ts`,
+and `src/config/themeVars.ts`.
 
-All `@sudobility/*` packages are installed from npmjs (not local/monorepo links).
+NativeWind cannot switch CSS-variable blocks on native, so `:root`/`.dark`/`@media` don't work.
+Variables are applied at runtime via `vars()` on a wrapping `View` (`ThemeVarsProvider`), and
+`generate-theme-css.js` deliberately strips the `.dark` block from the generated CSS.
+
+Light/dark is resolved independently in `ThemeVarsProvider` and `AppNavigator`, which also pushes it
+into `nativewindColorScheme.set(...)`. Three sources kept in lockstep by hand.
 
 ## Environment Variables
 
-Environment variables (EXPO*PUBLIC*\* prefix):
+All `process.env` reads live in `src/config/env.ts`. Nothing else reads env.
 
-| Variable                           | Description          | Default          |
-| ---------------------------------- | -------------------- | ---------------- |
-| `EXPO_PUBLIC_API_URL`              | Backend API URL      | `localhost:8029` |
-| `EXPO_PUBLIC_FIREBASE_API_KEY`     | Firebase API key     | required         |
-| `EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN` | Firebase auth domain | required         |
-| `EXPO_PUBLIC_FIREBASE_PROJECT_ID`  | Firebase project ID  | required         |
+| Variable | Default |
+|----------|---------|
+| `EXPO_PUBLIC_API_URL` | `http://localhost:8029` |
+| `EXPO_PUBLIC_FIREBASE_API_KEY` | `''` |
+| `EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN` | `''` |
+| `EXPO_PUBLIC_FIREBASE_PROJECT_ID` | `''` |
+| `EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET` | `''` |
+| `EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID` | `''` |
+| `EXPO_PUBLIC_FIREBASE_APP_ID` | `''` |
+| `EXPO_PUBLIC_DEV_MODE` | `'false'` |
+| `VITE_APP_NAME` | `'Starter App'` |
+| `VITE_APP_DOMAIN` | `'example.com'` |
+| `VITE_COMPANY_NAME` | `'My Company'` |
+| `GOOGLE_OAUTH_CLIENT_ID` | `''` |
+| `GOOGLE_OAUTH_IOS_CLIENT_ID` | `''` |
+| `GOOGLE_OAUTH_REVERSED_CLIENT_ID` | `''` |
 
-## Path Alias
-
-`@/*` resolves to `src/*` via both `tsconfig.json` and `babel-plugin-module-resolver`.
-
-## Key Patterns
-
-- **localStorage polyfill**: Bridges `localStorage` API to AsyncStorage for Zustand persist middleware compatibility
-- **Settings persistence**: Zustand store with AsyncStorage-backed persist middleware
-- **Env merging**: `scripts/merge-env.js` runs as a prestart hook to combine env files
+Firebase vars **default to `''`**, they are not enforced as required.
 
 ## Related Projects
 
-- **mogulgame_types** — Shared type definitions
-- **mogulgame_client** — API client SDK
-- **mogulgame_lib** — Business logic library with `useHistoriesManager`
-- **mogulgame_api** — Backend server this app communicates with
-- **mogulgame_app** — Web counterpart of this mobile app; shares mogulgame_client, mogulgame_lib, and mogulgame_types
+- **mogulgame_types** — Installed (`0.0.22`), **not imported**
+- **mogulgame_client** — Installed (`0.0.31`), **not imported**. Exposes `useProperties`, `useOffers`, `useLeaderboard`, `useFavorites`, `usePopularProperties`, `useUserProfile`
+- **mogulgame_lib** — Installed (`0.0.29`), **not imported**
+- **mogulgame_api** — Backend; `EXPO_PUBLIC_API_URL` defaults to its port
+- **mogulgame_app** — Web counterpart, which *does* consume client/lib/types
+
+`@sudobility/di` is also a declared dependency with zero import sites (likely transitive via `di_rn`).
+
+Actually used: `auth_lib`, `building_blocks_rn`, `components-rn`, `design`, `di_rn`, `types`.
 
 ## Coding Patterns
 
-- Bottom tab navigator with two stacks: Histories (list + detail) and Settings
-- `localStorage` polyfill in `src/polyfills/localStorage.ts` bridges the web `localStorage` API to `AsyncStorage` for Zustand persist middleware compatibility
-- Pre-start env merge script (`scripts/merge-env.js`) combines environment files before Metro starts
-- Google Sign-In is configured via `@react-native-google-signin/google-signin` in `AuthContext`
-- Custom `NetworkClient` implementation (fetch-based) is provided via `ApiContext` -- does not share the web DI layer
-- Path alias `@/*` resolves to `src/*` via both `tsconfig.json` and `babel-plugin-module-resolver`
-- Navigation types are defined in `src/navigation/types.ts` for type-safe navigation
+- `App.tsx:1` — `import '@/polyfills/localStorage';` **must stay first**, before any zustand store import. `persist` defaults to `createJSONStorage(() => localStorage)`; if `localStorage` is undefined it skips installing `api.persist` entirely
+- All `process.env` access goes through `src/config/env.ts`
+- babel `module-resolver` aliases are **first-match**: list specific aliases (`@/assets/*`) before the general `@` or you get a real bundle break that tsconfig masks
+- Platform differences use `.ios`/`.android` suffixes with the base file as the desktop implementation
 
 ## Gotchas
 
-- The prestart script merges `.env` files -- environment changes require restarting Metro (port 8090)
-- Metro runs on port `8084` (not the default 8081) -- ensure no port conflicts
-- The `localStorage` polyfill must be imported before any Zustand persist store is created
-- Firebase Auth uses `AsyncStorage` for persistence -- different from the web app's approach
-- Environment variables use `EXPO_PUBLIC_*` prefix
+- **Metro runs on port 8090**, not the default 8081
+- **`bun run test` is `jest --passWithNoTests`.** A green run does not mean tests ran. There are exactly **two** test files (`config/__tests__/constants.test.ts`, `polyfills/__tests__/localStorage.test.ts`). No component, navigation, store, or context tests
+- **i18n ships 15 locale directories but registers only English.** `assets/locales.ts` imports `en` alone. Selecting another language persists the choice and loads nothing. `SUPPORTED_LANGUAGES` is also duplicated between `src/i18n/index.ts` and `src/config/constants.ts`
+- **`CountryCode` is redeclared locally** in `src/stores/settingsStore.ts` and `src/screens/SettingsScreen.tsx` behind a stale `// TODO: Import from '@sudobility/mogulgame_types' once ^0.0.20 is published`. `0.0.22` is installed — this TODO is actionable now
+- The `localStorage` polyfill is a pure **in-memory** shim. It does **not** bridge to AsyncStorage; the store swaps in AsyncStorage separately
+- **NativeWind's JSX transform is Metro-only** (`babel.config.js` gates on `api.caller`). JSX behaves differently under Jest than under Metro
+- `jest.config.js` maps only `^@/(.*)$` -> `src/$1`. `@/assets/*` is **not** mapped, so any test that transitively imports `src/i18n/index.ts` will fail to resolve
+- `app.json` declares `com.sudobility.mogulgame`, but native identifiers were never renamed: `ios/StarterApp.xcodeproj`, `macos/StarterApp-macOS/`, `windows/StarterApp.sln`, `android/.../com/sudobility/starter/`
+- `app.json`'s expo `version` is `1.0.0` while `package.json` is `1.0.64` -- they have diverged
+- iOS/Android Google client IDs are **hardcoded in `AuthContext.ios.tsx` / `.android.tsx`**, not read from env. The three `GOOGLE_OAUTH_*` env vars lack the `EXPO_PUBLIC_` prefix, so Metro never inlines them and they are always `''`
+- `i18n` is initialized twice (`index.ts` and `App.tsx`)
+- `STORAGE_KEYS.SETTINGS` is never used; the persist key is the unrelated literal `'starter-settings'`
+- `__mocks__/react-native-config.js` mocks a package that is not in `package.json`
+- `react-native-in-app-review` is a dependency with no import sites
