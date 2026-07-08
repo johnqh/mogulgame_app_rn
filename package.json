@@ -1,6 +1,6 @@
 {
   "name": "mogulgame_app_rn",
-  "version": "1.0.62",
+  "version": "1.0.63",
   "displayName": "Starter App",
   "private": true,
   "scripts": {
@@ -35,11 +35,11 @@
     "@react-navigation/native": "^7.1.28",
     "@react-navigation/native-stack": "^7.10.1",
     "@sudobility/auth_lib": "^0.0.82",
-    "@sudobility/building_blocks_rn": "^0.0.61",
-    "@sudobility/components-rn": "^1.0.87",
-    "@sudobility/design": "^1.1.45",
+    "@sudobility/building_blocks_rn": "^0.0.62",
+    "@sudobility/components-rn": "^1.0.88",
+    "@sudobility/design": "^1.1.46",
     "@sudobility/di": "^1.5.58",
-    "@sudobility/di_rn": "^0.1.117",
+    "@sudobility/di_rn": "^0.1.118",
     "@sudobility/mogulgame_client": "^0.0.30",
     "@sudobility/mogulgame_lib": "^0.0.28",
     "@sudobility/mogulgame_types": "^0.0.21",
